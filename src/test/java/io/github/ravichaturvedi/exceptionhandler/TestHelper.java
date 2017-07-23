@@ -16,18 +16,17 @@
 package io.github.ravichaturvedi.exceptionhandler;
 
 
-import org.junit.Test;
+public class TestHelper {
 
-import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
-import static org.junit.Assert.assertEquals;
+    public static <T> T foo(T val) throws Exception {
+        if (!(val instanceof Number)) {
+            throw new IllegalArgumentException("Not a number");
+        }
 
+        return val;
+    }
 
-public class TestSwallow {
-
-    @Test
-    public void testHandle() {
-        swallow(() -> TestHelper.foo(new Object()), with(e -> assertEquals(e.getClass(), IllegalArgumentException.class)));
-        swallow(() -> TestHelper.foo(2), with(System.out::println));
-        swallow(TestHelper::bar, with(System.out::println));
+    public static void bar() throws Exception {
+        throw new Exception("Not a number");
     }
 }

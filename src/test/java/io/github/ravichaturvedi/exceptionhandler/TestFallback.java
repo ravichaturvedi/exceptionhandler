@@ -18,7 +18,12 @@ package io.github.ravichaturvedi.exceptionhandler;
 
 import org.junit.Test;
 
-import static io.github.ravichaturvedi.exceptionhandler.Fallback.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static io.github.ravichaturvedi.exceptionhandler.Fallback.fallback;
+import static io.github.ravichaturvedi.exceptionhandler.Fallback.to;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -26,17 +31,17 @@ public class TestFallback {
 
     @Test
     public void testFallback() {
-        int value = fallback(() -> {return 3;}, to(2));
+        int value = fallback(() -> 3, to(2));
         assertThat(value, is(3));
 
-        value = fallback(() -> {throw new IllegalStateException("");}, to(2));
-        assertThat(value, is(2));
+        value = fallback(() -> TestHelper.foo(3), to(2));
+        assertThat(value, is(3));
 
-        value = fallback(() -> {throw new IllegalStateException("");}, to(() -> 2));
-        assertThat(value, is(2));
+        List<Object> result = fallback(() -> TestHelper.foo(Collections.EMPTY_LIST), to(Arrays.asList(1)));
+        assertThat(result, is(Arrays.asList(1)));
 
-        value = fallback(() -> {throw new IllegalStateException("");}, to(e -> 2));
-        assertThat(value, is(2));
+        String res = fallback(() -> TestHelper.foo(""), to(e -> "2"));
+        assertThat(res, is("2"));
 
         value = fallback(() -> {throw new IllegalStateException("");}, e -> 2);
         assertThat(value, is(2));
