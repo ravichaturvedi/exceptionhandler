@@ -17,7 +17,7 @@ Add the following `maven` dependency to your project `pom.xml`:
 
 ```java
 import static io.github.ravichaturvedi.exceptionhandler.Wrapper.*;
-import static io.github.ravichaturvedi.exceptionhandler.Fallbacker.*;
+import static io.github.ravichaturvedi.exceptionhandler.Fallback.*;
 import static io.github.ravichaturvedi.exceptionhandler.Handler.*;
 
 wrap(() -> {
@@ -68,25 +68,25 @@ wrapAll(() -> {
 fallback to some other functionality to load data if the primary functionality didn't worked.
 
 ```java
-import static io.github.ravichaturvedi.exceptionhandler.Fallbacker.*;
+import static io.github.ravichaturvedi.exceptionhandler.Fallback.*;
 
 // Fallback to some value if the actual code throws exception
-int value = fallback(2, () -> {
+int value = fallback(() -> {
     // do something
     throw new Exception("");
-});
+}, to(2));
 
 // Fallback to a supplier if actual code throws Exception
 int value = fallback(() -> {
     // do something
     throw new Exception("");
-}, () -> 2);
+}, to(() -> 2));
 
 // Fallback to Exception function if actual code throws Exception.
 int value = fallback(() -> {
     // do something
     throw new Exception("");
-}, e -> 2);
+}, to(e -> 2));
 ```
 
 3. Handler:

@@ -18,10 +18,7 @@ package io.github.ravichaturvedi.exceptionhandler;
 
 import org.junit.Test;
 
-import static io.github.ravichaturvedi.exceptionhandler.Fallbacker.fallback;
 import static io.github.ravichaturvedi.exceptionhandler.Handler.handle;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class TestHandler {
 
