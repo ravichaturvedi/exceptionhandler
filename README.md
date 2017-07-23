@@ -27,9 +27,9 @@ wrap(() -> {
 
 int value = fallback(() -> {
     throw new Exception("");
-}, 2)
+}, to(2))
 
-handle(() -> {
+swallow(() -> {
     throw new Exception("");
 }, System.out::println)
 ```
