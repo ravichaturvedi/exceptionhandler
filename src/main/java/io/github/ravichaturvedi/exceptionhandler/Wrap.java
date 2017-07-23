@@ -22,12 +22,21 @@ import static io.github.ravichaturvedi.exceptionhandler.Callables.from;
 
 
 /**
- * {@link Wrapper} provides static methods to wrap the exceptionhandler thrown by the provided functionality into runtime exceptionhandler.
+ * {@link Wrap} provides static methods to wrap the {@link Exception} thrown by the provided functionality into {@link RuntimeException}.
  */
-public class Wrapper {
+public class Wrap {
 
     /**
-     * Wrap the exceptionhandler thrown by the provided {@link Runner} into the runtime exceptionhandler, if checked exceptionhandler.
+     * Returns the same function as provided. Kept it so that we can make the source code looks more fluent.
+     * @param exceptionFunction
+     * @return
+     */
+    public static Function<Exception, RuntimeException> using(Function<Exception, RuntimeException> exceptionFunction) {
+        return exceptionFunction;
+    }
+
+    /**
+     * Wrap the {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException}, if checked {@link Exception}.
      *
      * @param runner
      */
@@ -36,7 +45,7 @@ public class Wrapper {
     }
 
     /**
-     * Wrap the exceptionhandler thrown by the provided {@link Runner} into the runtime exceptionhandler (using exceptionFunction), if checked exceptionhandler.
+     * Wrap the {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException} (using exceptionFunction), if checked {@link Exception}.
      *
      * @param runner
      * @param exceptionFunction
@@ -47,7 +56,7 @@ public class Wrapper {
 
 
     /**
-     * Wrap all the exceptionhandler thrown by the provided {@link Runner} into the runtime exceptionhandler (using exceptionFunction)
+     * Wrap all the {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException} (using exceptionFunction)
      * @param runner
      * @param exceptionFunction
      */
@@ -57,7 +66,7 @@ public class Wrapper {
 
 
     /**
-     * Wrap the exceptionhandler thrown by the provided {@link Callable} into the runtime exceptionhandler, if checked exceptionhandler.
+     * Wrap the {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException}, if checked {@link Exception}.
      *
      * @param callable
      * @param <V>
@@ -68,7 +77,7 @@ public class Wrapper {
     }
 
     /**
-     * Wrap the exceptionhandler thrown by the provided {@link Callable} into the runtime exceptionhandler (using exceptionFunction), if checked exceptionhandler.
+     * Wrap the {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException} (using exceptionFunction), if checked {@link Exception}.
      *
      * @param callable
      * @param exceptionFunction
@@ -86,7 +95,7 @@ public class Wrapper {
     }
 
     /**
-     * Wrap all the exceptionhandler thrown by the provided {@link Callable} into the runtime exceptionhandler (using exceptionFunction).
+     * Wrap all the {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException} (using exceptionFunction).
      *
      * @param callable
      * @param exceptionFunction

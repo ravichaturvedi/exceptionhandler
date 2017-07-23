@@ -37,5 +37,8 @@ public class TestFallback {
 
         value = fallback(() -> {throw new IllegalStateException("");}, to(e -> 2));
         assertThat(value, is(2));
+
+        value = fallback(() -> {throw new IllegalStateException("");}, e -> 2);
+        assertThat(value, is(2));
     }
 }

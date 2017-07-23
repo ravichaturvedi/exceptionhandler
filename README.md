@@ -16,7 +16,7 @@ Add the following `maven` dependency to your project `pom.xml`:
 ```
 
 ```java
-import static io.github.ravichaturvedi.exceptionhandler.Wrapper.*;
+import static io.github.ravichaturvedi.exceptionhandler.Wrap.*;
 import static io.github.ravichaturvedi.exceptionhandler.Fallback.*;
 import static io.github.ravichaturvedi.exceptionhandler.Handler.*;
 
@@ -44,7 +44,7 @@ However, this library simplifies those execution paths using lamda expression wi
 wraps the function/code block to throw runtime expression (generally requires so we need not to handle exception at every method.)
 
 ```java
-import static io.github.ravichaturvedi.exceptionhandler.Wrapper.*;
+import static io.github.ravichaturvedi.exceptionhandler.Wrap.*;
 
 wrap(() -> {
     // do something
@@ -55,7 +55,7 @@ wrap(() -> {
 wrap(() -> {
     // do something
     throw new RuntimeException("");
-}, e -> new IllegalArgumentException(e));
+}, using(e -> new IllegalArgumentException(e)));
 
 // throws IllegalArgumentException
 wrapAll(() -> {

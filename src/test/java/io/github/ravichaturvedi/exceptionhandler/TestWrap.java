@@ -18,12 +18,11 @@ package io.github.ravichaturvedi.exceptionhandler;
 
 import org.junit.Test;
 
-import static io.github.ravichaturvedi.exceptionhandler.Wrapper.wrap;
-import static io.github.ravichaturvedi.exceptionhandler.Wrapper.wrapAll;
+import static io.github.ravichaturvedi.exceptionhandler.Wrap.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class TestWrapper {
+public class TestWrap {
 
     @Test
     public void testWrap() {
@@ -47,6 +46,12 @@ public class TestWrapper {
 
         try {
             wrapAll(() -> {throw new IllegalArgumentException("bla bla");}, e -> new RuntimeException(e));
+        } catch (RuntimeException e) {
+            assertThat(e.getCause().getMessage(), is("bla bla"));
+        }
+
+        try {
+            wrapAll(() -> {throw new IllegalArgumentException("bla bla");}, using(e -> new RuntimeException(e)));
         } catch (RuntimeException e) {
             assertThat(e.getCause().getMessage(), is("bla bla"));
         }
