@@ -40,7 +40,7 @@ However, this library simplifies those execution paths using lamda expression wi
 
 
 ## Usages 
-1. Wrapper: 
+1. Wrap: 
 wraps the function/code block to throw runtime expression (generally requires so we need not to handle exception at every method.)
 
 ```java
@@ -64,7 +64,7 @@ wrapAll(() -> {
 }, e -> new IllegalArgumentException(e));
 ```
 
-2. Fallbacker:
+2. Fallback:
 fallback to some other functionality to load data if the primary functionality didn't worked.
 
 ```java
@@ -89,8 +89,8 @@ int value = fallback(() -> {
 }, to(e -> 2));
 ```
 
-3. Handler:
-handle the exception thrown by some piece of code.
+3. Swallow:
+swallow the exception thrown by some piece of code.
 
 ```java
 import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
