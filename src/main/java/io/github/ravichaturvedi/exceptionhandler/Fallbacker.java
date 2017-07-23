@@ -27,17 +27,13 @@ public class Fallbacker {
 
     /**
      * Fallback to a value if the provided {@link Callable} throws an exceptionhandler.
-     * @param callable
      * @param value
+     * @param callable
      * @param <V>
      * @return
      */
-    public static <V> V fallback(Callable<V> callable, V value) {
-        try {
-            return callable.call();
-        } catch (Exception e) {
-            return value;
-        }
+    public static <V> V fallback(V value, Callable<V> callable) {
+        return fallback(callable, () -> value);
     }
 
     /**
@@ -48,11 +44,7 @@ public class Fallbacker {
      * @return
      */
     public static <V> V fallback(Callable<V> callable, Supplier<V> valueSupplier) {
-        try {
-            return callable.call();
-        } catch (Exception e) {
-            return valueSupplier.get();
-        }
+        return fallback(callable, e -> valueSupplier.get());
     }
 
     /**

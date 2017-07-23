@@ -18,8 +18,8 @@ package io.github.ravichaturvedi.exceptionhandler;
 
 import org.junit.Test;
 
-import static io.github.ravichaturvedi.exceptionhandler.Handler.handle;
 import static io.github.ravichaturvedi.exceptionhandler.Wrapper.wrap;
+import static io.github.ravichaturvedi.exceptionhandler.Wrapper.wrapAll;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,8 +28,26 @@ public class TestWrapper {
     @Test
     public void testWrap() {
         try {
-            Wrapper.wrap(() -> {throw new Exception("bla bla");}, e -> new IllegalArgumentException(e));
+            wrap(() -> {throw new Exception("bla bla");});
+        } catch (RuntimeException e) {
+            assertThat(e.getCause().getMessage(), is("bla bla"));
+        }
+
+        try {
+            wrap(() -> {throw new IllegalArgumentException("bla bla");});
         } catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), is("bla bla"));
+        }
+
+        try {
+            wrap(() -> {throw new Exception("bla bla");}, e -> new IllegalArgumentException(e));
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getCause().getMessage(), is("bla bla"));
+        }
+
+        try {
+            wrapAll(() -> {throw new IllegalArgumentException("bla bla");}, e -> new RuntimeException(e));
+        } catch (RuntimeException e) {
             assertThat(e.getCause().getMessage(), is("bla bla"));
         }
     }

@@ -18,18 +18,24 @@ package io.github.ravichaturvedi.exceptionhandler;
 
 import org.junit.Test;
 
+import static io.github.ravichaturvedi.exceptionhandler.Fallbacker.fallback;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static io.github.ravichaturvedi.exceptionhandler.Fallbacker.fallback;
 
 public class TestFallbacker {
 
     @Test
     public void testFallback() {
-        int value = fallback(() -> {return 3;}, 2);
+        int value = fallback(2, () -> {return 3;});
         assertThat(value, is(3));
 
-        value = fallback(() -> {throw new IllegalStateException("");},2);
-        assertThat(value, is(2));;
+        value = fallback(2, () -> {throw new IllegalStateException("");});
+        assertThat(value, is(2));
+
+        value = fallback(() -> {throw new IllegalStateException("");},() -> 2);
+        assertThat(value, is(2));
+
+        value = fallback(() -> {throw new IllegalStateException("");}, e -> 2);
+        assertThat(value, is(2));
     }
 }
