@@ -18,7 +18,7 @@ Add the following `maven` dependency to your project `pom.xml`:
 ```java
 import static io.github.ravichaturvedi.exceptionhandler.Wrap.*;
 import static io.github.ravichaturvedi.exceptionhandler.Fallback.*;
-import static io.github.ravichaturvedi.exceptionhandler.Handler.*;
+import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
 
 wrap(() -> {
     // do something
@@ -93,12 +93,12 @@ int value = fallback(() -> {
 handle the exception thrown by some piece of code.
 
 ```java
-import static io.github.ravichaturvedi.exceptionhandler.Handler.*;
+import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
 
 // Fallback to some value if the actual code throws exception
-handle(() -> {
+swallow(() -> {
     // do something
     throw new Exception("");
-}, e -> {});
+}, with(System.out::println));
 
 ```

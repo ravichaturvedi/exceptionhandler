@@ -18,14 +18,13 @@ package io.github.ravichaturvedi.exceptionhandler;
 
 import org.junit.Test;
 
-import static io.github.ravichaturvedi.exceptionhandler.Handler.handle;
+import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
 
-public class TestHandler {
+
+public class TestSwallow {
 
     @Test
     public void testHandle() {
-        handle(() -> {throw new Exception();}, e -> {
-            System.out.println(e);
-        });
+        swallow(() -> {throw new Exception();}, with(System.out::println));
     }
 }

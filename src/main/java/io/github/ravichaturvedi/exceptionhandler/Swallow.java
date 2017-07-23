@@ -22,27 +22,36 @@ import java.util.function.Consumer;
 import static io.github.ravichaturvedi.exceptionhandler.Callables.from;
 
 /**
- * {@link Handler} provides static functions to deal with exceptions.
+ * {@link Swallow} provides static functions to deal with exceptions.
  */
-public class Handler {
+public class Swallow {
 
     /**
-     * Handle the exceptionhandler thrown by the provided {@link Runner}, using the provided exceptionhandler {@link Consumer}.
+     * Returns the provided consumer. Kept it so that we can make the source code looks more fluent.
+     * @param exceptionConsumer
+     * @return
+     */
+    public static Consumer<Exception> with(Consumer<Exception> exceptionConsumer) {
+        return exceptionConsumer;
+    }
+
+    /**
+     * Swallow the {@link Exception} thrown by the provided {@link Runner}, using the provided {@link Consumer}.
      *
      * @param runner
      * @param exceptionConsumer
      */
-    public static void handle(Runner runner, Consumer<Exception> exceptionConsumer) {
-        handle(from(runner), exceptionConsumer);
+    public static void swallow(Runner runner, Consumer<Exception> exceptionConsumer) {
+        swallow(from(runner), exceptionConsumer);
     }
 
     /**
-     * Handle the exceptionhandler thrown by the provided {@link Callable}, using the provided exceptionhandler {@link Consumer}.
+     * Swallow the {@link Exception} thrown by the provided {@link Callable}, using the provided {@link Consumer}.
      *
      * @param callable
      * @param exceptionConsumer
      */
-    public static void handle(Callable<?> callable, Consumer<Exception> exceptionConsumer) {
+    public static void swallow(Callable<?> callable, Consumer<Exception> exceptionConsumer) {
         try {
             callable.call();
         } catch (Exception e) {
