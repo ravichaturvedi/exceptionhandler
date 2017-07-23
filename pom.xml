@@ -21,7 +21,7 @@ limitations under the License.
 
     <groupId>io.github.ravichaturvedi.exceptionhandler</groupId>
     <artifactId>exceptionhandler</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>ExceptionHandler</name>
