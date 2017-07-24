@@ -43,7 +43,7 @@ public class TestFallback {
         String res = fallback(() -> TestHelper.foo(""), to(e -> "2"));
         assertThat(res, is("2"));
 
-        value = fallback(() -> {throw new IllegalStateException("");}, e -> 2);
+        value = fallback(to(e -> 2), () -> {throw new IllegalStateException("");});
         assertThat(value, is(2));
     }
 }

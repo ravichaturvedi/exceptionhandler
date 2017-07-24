@@ -26,63 +26,68 @@ import java.util.function.Supplier;
 public class Fallback {
 
     /**
-     * Returns back the supplier function using the provided value.
+     * {@link Handler} defines the handler for the fallback function.
+     * @param <V>
+     */
+    @FunctionalInterface
+    private interface Handler<V> {
+        V handle(Exception e);
+    }
+
+    /**
+     * Returns back the {@link Handler} using the provided value.
      *
      * @param value
      * @param <V>
      * @return
      */
-    public static <V> Supplier<V> to(V value) {
-        return () -> value;
+    public static <V> Handler<V> to(V value) {
+        return e -> value;
     }
 
     /**
-     * Returns back the supplier function using the provided value supplier.
+     * Returns back the {@link Handler} using the provided value {@link Supplier}.
      * @param valueSupplier
      * @param <V>
      * @return
      */
-    public static <V> Supplier<V> to(Supplier<V> valueSupplier) {
-        return valueSupplier;
+    public static <V> Handler<V> to(Supplier<V> valueSupplier) {
+        return e -> valueSupplier.get();
     }
 
     /**
-     * Returns back the fallback function using the given function.
+     * Returns back the {@link Handler} using the given {@link Function}.
      * @param fallbackFunc
      * @param <V>
      * @return
      */
-    public static <V> Function<Exception, V> to(Function fallbackFunc) {
-        return fallbackFunc;
+    public static <V> Handler<V> to(Function<Exception, V> fallbackFunc) {
+        return fallbackFunc::apply;
     }
 
     /**
-     * Fallback to a value {@link Supplier<V>} if the provided {@link Callable<V>} throws an {@link Exception}.
+     * Fallback to the {@link Handler}, if provided {@link Callable} throws an {@link Exception}.
      * @param callable
-     * @param valueSupplier
+     * @param handler
      * @param <V>
      * @return
      */
-    public static <V> V fallback(Callable<V> callable, Supplier<V> valueSupplier) {
+    public static <V> V fallback(Callable<V> callable, Handler<V> handler) {
         try {
             return callable.call();
         } catch (Exception e) {
-            return valueSupplier.get();
+            return handler.handle(e);
         }
     }
 
     /**
-     * Fallback to the {@link Function<Exception,V>}, if provided {@link Callable<V>} throws an {@link Exception}.
+     * Fallback to the {@link Handler}, if provided {@link Callable} throws an {@link Exception}.
+     * @param handler
      * @param callable
-     * @param fallbackFunc
      * @param <V>
      * @return
      */
-    public static <V> V fallback(Callable<V> callable, Function<Exception, V> fallbackFunc) {
-        try {
-            return callable.call();
-        } catch (Exception e) {
-            return fallbackFunc.apply(e);
-        }
+    public static <V> V fallback(Handler<V> handler, Callable<V> callable) {
+        return fallback(callable, handler);
     }
 }
