@@ -27,7 +27,10 @@ public class TestSwallow {
     @Test
     public void testHandle() {
         swallow(() -> TestHelper.foo(new Object()), with(e -> assertEquals(e.getClass(), IllegalArgumentException.class)));
-        swallow(() -> TestHelper.foo(2), with(System.out::println));
+        swallow(with(e -> assertEquals(e.getClass(), IllegalArgumentException.class)), () -> TestHelper.foo(new Object()));
+
+        swallow(with(System.out::println), () -> TestHelper.foo(2));
         swallow(TestHelper::bar, with(System.out::println));
+        swallow(with(System.out::println), TestHelper::bar);
     }
 }

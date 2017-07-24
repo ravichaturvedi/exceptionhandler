@@ -27,35 +27,63 @@ import static io.github.ravichaturvedi.exceptionhandler.Callables.from;
 public class Swallow {
 
     /**
-     * Returns the provided consumer. Kept it so that we can make the source code looks more fluent.
+     * {@link Handler} defines the handler for the swallow function.
+     */
+    @FunctionalInterface
+    private interface Handler {
+        void handle(Exception e);
+    }
+
+    /**
+     * Returns the {@link Handler} for the given {@link Exception} {@link Consumer}.
      * @param exceptionConsumer
      * @return
      */
-    public static Consumer<Exception> with(Consumer<Exception> exceptionConsumer) {
-        return exceptionConsumer;
+    public static Handler with(Consumer<Exception> exceptionConsumer) {
+        return exceptionConsumer::accept;
     }
 
     /**
-     * Swallow the {@link Exception} thrown by the provided {@link Runner}, using the provided {@link Consumer}.
+     * Swallow the {@link Exception} thrown by the provided {@link Runner}, with the given {@link Handler}.
      *
      * @param runner
-     * @param exceptionConsumer
+     * @param handler
      */
-    public static void swallow(Runner runner, Consumer<Exception> exceptionConsumer) {
-        swallow(from(runner), exceptionConsumer);
+    public static void swallow(Runner runner, Handler handler) {
+        swallow(from(runner), handler);
     }
 
     /**
-     * Swallow the {@link Exception} thrown by the provided {@link Callable}, using the provided {@link Consumer}.
+     * Swallow the {@link Exception} thrown by the provided {@link Runner}, with the given {@link Handler}.
+     *
+     * @param handler
+     * @param runner
+     */
+    public static void swallow(Handler handler, Runner runner) {
+        swallow(runner, handler);
+    }
+
+    /**
+     * Swallow the {@link Exception} thrown by the provided {@link Callable}, with the given {@link Handler}.
      *
      * @param callable
-     * @param exceptionConsumer
+     * @param handler
      */
-    public static void swallow(Callable<?> callable, Consumer<Exception> exceptionConsumer) {
+    public static void swallow(Callable<?> callable, Handler handler) {
         try {
             callable.call();
         } catch (Exception e) {
-            exceptionConsumer.accept(e);
+            handler.handle(e);
         }
+    }
+
+    /**
+     * Swallow the {@link Exception} thrown by the provided {@link Callable}, with the given {@link Handler}.
+     *
+     * @param handler
+     * @param callable
+     */
+    public static void swallow(Handler handler, Callable<?> callable) {
+        swallow(callable, handler);
     }
 }
