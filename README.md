@@ -54,7 +54,7 @@ void bar() throws Exception {
 }
 ```
 
-1. Wrap: 
+1. **Wrap**: 
 wraps the function/code block to throw runtime expression (generally requires so we need not to handle exception at every method.)
 
 ```java
@@ -71,7 +71,7 @@ wrap(this::foo, using(e -> new IllegalArgumentException(e)));
 wrap(using(e -> new IllegalArgumentException(e)), this::bar);
 ```
 
-2. Fallback:
+2. **Fallback**:
 fallback to some other functionality to load data if the primary functionality didn't worked.
 
 ```java
@@ -89,7 +89,7 @@ int value = fallback(this::foo, to(e -> 2));
 int value = fallback(to(e -> 2), this::foo);
 ```
 
-3. Swallow:
+3. **Swallow**:
 swallow the exception thrown by some piece of code.
 
 ```java
@@ -105,5 +105,24 @@ swallow(this::bar, usingLogger(System.out::println));
 
 swallow(usingLogger(System.out::println), this::foo);
 swallow(usingLogger(System.out::println), this::bar);
+
+```
+
+4. **Cleanup**:
+Perform cleanup after some piece of code throws Exception.
+
+```java
+import static io.github.ravichaturvedi.exceptionhandler.Cleanup.*;
+// Swallowing the exception from some piece of code using the provided exception logger.
+cleanup(this::foo, with(e -> {
+    // do something to cleanup exception
+))}
+
+cleanup(this::bar, with(e -> {
+    // do something to cleanup exception
+))}
+
+cleanup(with(System.out::println), this::foo);
+cleanup(with(System.out::println), this::bar);
 
 ```
