@@ -27,86 +27,135 @@ import static io.github.ravichaturvedi.exceptionhandler.Callables.from;
 public class Wrap {
 
     /**
-     * Returns the same function as provided. Kept it so that we can make the source code looks more fluent.
-     * @param exceptionFunction
-     * @return
+     * {@link Handler} defines the handler for the wrap function.
      */
-    public static Function<Exception, RuntimeException> using(Function<Exception, RuntimeException> exceptionFunction) {
-        return exceptionFunction;
+    @FunctionalInterface
+    private interface Handler {
+        RuntimeException handle(Exception e);
     }
 
     /**
-     * Wrap the {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException}, if checked {@link Exception}.
+     * Returns the handler out of the provided exception {@link Function}.
+     * @param exceptionFunction
+     * @return
+     */
+    public static Handler using(Function<Exception, RuntimeException> exceptionFunction) {
+        return exceptionFunction::apply;
+    }
+
+    /**
+     * Wrap the checked {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException}.
      *
      * @param runner
      */
     public static void wrap(Runner runner) {
-        wrap(Callables.from(runner));
+        wrap(from(runner));
     }
 
     /**
-     * Wrap the {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException} (using exceptionFunction), if checked {@link Exception}.
+     * Wrap the checked {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException} (using {@link Handler}).
      *
      * @param runner
-     * @param exceptionFunction
+     * @param handler
      */
-    public static void wrap(Runner runner, Function<Exception, RuntimeException> exceptionFunction) {
-        wrap(from(runner), exceptionFunction);
+    public static void wrap(Runner runner, Handler handler) {
+        wrap(from(runner), handler);
     }
 
-
     /**
-     * Wrap all the {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException} (using exceptionFunction)
+     * Wrap the checked {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException} (using {@link Handler}).
+     *
      * @param runner
-     * @param exceptionFunction
+     * @param handler
      */
-    public static void wrapAll(Runner runner, Function<Exception, RuntimeException> exceptionFunction) {
-        wrapAll(from(runner), exceptionFunction);
+    public static void wrap(Handler handler, Runner runner) {
+        wrap(runner, handler);
     }
 
+    /**
+     * Wrap all the {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException} (using {@link Handler}).
+     * @param runner
+     * @param handler
+     */
+    public static void wrapAll(Runner runner, Handler handler) {
+        wrapAll(from(runner), handler);
+    }
 
     /**
-     * Wrap the {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException}, if checked {@link Exception}.
+     * Wrap all the {@link Exception} thrown by the provided {@link Runner} into the {@link RuntimeException} (using {@link Handler}).
+     * @param handler
+     * @param runner
+     */
+    public static void wrapAll(Handler handler, Runner runner) {
+        wrapAll(runner, handler);
+    }
+
+    /**
+     * Wrap the checked {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException}.
      *
      * @param callable
      * @param <V>
      * @return
      */
     public static <V> V wrap(Callable<V> callable) {
-        return wrap(callable, RuntimeException::new);
+        return wrap(callable, using(RuntimeException::new));
     }
 
     /**
-     * Wrap the {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException} (using exceptionFunction), if checked {@link Exception}.
+     * Wrap the checked {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException} (using {@link Handler}).
      *
      * @param callable
-     * @param exceptionFunction
+     * @param handler
      * @param <V>
      * @return
      */
-    public static <V> V wrap(Callable<V> callable, Function<Exception, RuntimeException> exceptionFunction) {
+    public static <V> V wrap(Callable<V> callable, Handler handler) {
         try {
             return callable.call();
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw exceptionFunction.apply(e);
+            throw handler.handle(e);
         }
     }
 
     /**
-     * Wrap all the {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException} (using exceptionFunction).
+     * Wrap the checked {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException} (using {@link Handler}).
      *
+     * @param handler
      * @param callable
-     * @param exceptionFunction
      * @param <V>
      * @return
      */
-    public static <V> V wrapAll(Callable<V> callable, Function<Exception, RuntimeException> exceptionFunction) {
+    public static <V> V wrap(Handler handler, Callable<V> callable) {
+       return wrap(callable, handler);
+    }
+
+    /**
+     * Wrap all the {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException} (using {@link Handler}).
+     *
+     * @param callable
+     * @param handler
+     * @param <V>
+     * @return
+     */
+    public static <V> V wrapAll(Callable<V> callable, Handler handler) {
         try {
             return callable.call();
         } catch (Exception e) {
-            throw exceptionFunction.apply(e);
+            throw handler.handle(e);
         }
+    }
+
+    /**
+     * Wrap all the {@link Exception} thrown by the provided {@link Callable} into the {@link RuntimeException} (using {@link Handler}).
+     *
+     * @param handler
+     * @param callable
+     * @param <V>
+     * @return
+     */
+    public static <V> V wrapAll(Handler handler, Callable<V> callable) {
+        return wrapAll(callable, handler);
     }
 }

@@ -27,6 +27,6 @@ public class TestHelper {
     }
 
     public static void bar() throws Exception {
-        throw new Exception("Not a number");
+        throw new Exception("bla bla");
     }
 }

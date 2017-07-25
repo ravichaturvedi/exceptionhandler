@@ -27,31 +27,37 @@ public class TestWrap {
     @Test
     public void testWrap() {
         try {
-            wrap(() -> {throw new Exception("bla bla");});
+            wrap(TestHelper::bar);
         } catch (RuntimeException e) {
             assertThat(e.getCause().getMessage(), is("bla bla"));
         }
 
         try {
-            wrap(() -> {throw new IllegalArgumentException("bla bla");});
+            wrap(() -> TestHelper.foo(new Object()));
         } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), is("bla bla"));
+            assertThat(e.getMessage(), is("Not a number"));
         }
 
         try {
-            wrap(() -> {throw new Exception("bla bla");}, e -> new IllegalArgumentException(e));
+            wrap(TestHelper::bar, using(IllegalArgumentException::new));
         } catch (IllegalArgumentException e) {
             assertThat(e.getCause().getMessage(), is("bla bla"));
         }
 
         try {
-            wrapAll(() -> {throw new IllegalArgumentException("bla bla");}, e -> new RuntimeException(e));
+            wrap(using(IllegalArgumentException::new), TestHelper::bar);
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getCause().getMessage(), is("bla bla"));
+        }
+
+        try {
+            wrapAll(TestHelper::bar, using(RuntimeException::new));
         } catch (RuntimeException e) {
             assertThat(e.getCause().getMessage(), is("bla bla"));
         }
 
         try {
-            wrapAll(() -> {throw new IllegalArgumentException("bla bla");}, using(e -> new RuntimeException(e)));
+            wrapAll(using(RuntimeException::new), TestHelper::bar);
         } catch (RuntimeException e) {
             assertThat(e.getCause().getMessage(), is("bla bla"));
         }
