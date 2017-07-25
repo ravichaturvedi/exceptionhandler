@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 
 /**
- * {@link Fallback} provides the static functions to deal with fallback handling, in case provided {@link Callable} throws an {@link Exception}.
+ * {@link Fallback} provides the static functions to deal with fallback handling, in case provided code-block throws an {@link Exception}.
  */
 public class Fallback {
 

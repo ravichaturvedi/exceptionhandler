@@ -15,21 +15,21 @@
  */
 package io.github.ravichaturvedi.exceptionhandler;
 
-
 import org.junit.Test;
 
-import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
+import static io.github.ravichaturvedi.exceptionhandler.Cleanup.cleanup;
+import static io.github.ravichaturvedi.exceptionhandler.Cleanup.with;
+import static org.junit.Assert.assertEquals;
 
-
-public class TestSwallow {
+public class TestCleanup {
 
     @Test
     public void testHandle() {
-        swallow(() -> TestHelper.foo(new Object()), usingLogger(System.out::println));
-        swallow(usingLogger(System.out::println), () -> TestHelper.foo(new Object()));
+        cleanup(() -> TestHelper.foo(new Object()), with(e -> assertEquals(e.getClass(), IllegalArgumentException.class)));
+        cleanup(Cleanup.with(e -> assertEquals(e.getClass(), IllegalArgumentException.class)), () -> TestHelper.foo(new Object()));
 
-        swallow(usingLogger(System.out::println), () -> TestHelper.foo(2));
-        swallow(TestHelper::bar, usingLogger(System.out::println));
-        swallow(usingLogger(System.out::println), TestHelper::bar);
+        cleanup(with(System.out::println), () -> TestHelper.foo(2));
+        cleanup(TestHelper::bar, with(System.out::println));
+        cleanup(with(System.out::println), TestHelper::bar);
     }
 }

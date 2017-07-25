@@ -22,7 +22,7 @@ import static io.github.ravichaturvedi.exceptionhandler.Callables.from;
 
 
 /**
- * {@link Wrap} provides static methods to wrap the {@link Exception} thrown by the provided functionality into {@link RuntimeException}.
+ * {@link Wrap} provides static methods to wrap the {@link Exception} thrown by the provided code-block into {@link RuntimeException}.
  */
 public class Wrap {
 

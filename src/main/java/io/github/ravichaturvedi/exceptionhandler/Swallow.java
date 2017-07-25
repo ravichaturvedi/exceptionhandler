@@ -17,14 +17,21 @@ package io.github.ravichaturvedi.exceptionhandler;
 
 
 import java.util.concurrent.Callable;
-import java.util.function.Consumer;
 
 import static io.github.ravichaturvedi.exceptionhandler.Callables.from;
 
 /**
- * {@link Swallow} provides static functions to deal with exceptions.
+ * {@link Swallow} provides static functions to deal with swallowing the {@link Exception}, in case provided code-block throws an {@link Exception}.
  */
 public class Swallow {
+
+    /**
+     * {@link ExceptionLogger} defines the exception logging mechanism
+     */
+    @FunctionalInterface
+    interface ExceptionLogger {
+        void log(Exception e);
+    }
 
     /**
      * {@link Handler} defines the handler for the swallow function.
@@ -35,16 +42,16 @@ public class Swallow {
     }
 
     /**
-     * Returns the {@link Handler} for the given {@link Exception} {@link Consumer}.
-     * @param exceptionConsumer
+     * Returns the {@link Handler} for the given {@link ExceptionLogger}.
+     * @param exceptionLogger
      * @return
      */
-    public static Handler with(Consumer<Exception> exceptionConsumer) {
-        return exceptionConsumer::accept;
+    public static Handler usingLogger(ExceptionLogger exceptionLogger) {
+        return exceptionLogger::log;
     }
 
     /**
-     * Swallow the {@link Exception} thrown by the provided {@link Runner}, with the given {@link Handler}.
+     * Swallow the {@link Exception} thrown by the provided {@link Runner}, using provided {@link Handler}.
      *
      * @param runner
      * @param handler
@@ -54,7 +61,7 @@ public class Swallow {
     }
 
     /**
-     * Swallow the {@link Exception} thrown by the provided {@link Runner}, with the given {@link Handler}.
+     * Swallow the {@link Exception} thrown by the provided {@link Runner}, using provided {@link Handler}.
      *
      * @param handler
      * @param runner
@@ -64,7 +71,16 @@ public class Swallow {
     }
 
     /**
-     * Swallow the {@link Exception} thrown by the provided {@link Callable}, with the given {@link Handler}.
+     * Swallow the {@link Exception} thrown by the provided {@link Runner}.
+     *
+     * @param runner
+     */
+    public static void swallow(Runner runner) {
+        swallow(from(runner));
+    }
+
+    /**
+     * Swallow the {@link Exception} thrown by the provided {@link Callable}, using provided {@link Handler}.
      *
      * @param callable
      * @param handler
@@ -78,12 +94,21 @@ public class Swallow {
     }
 
     /**
-     * Swallow the {@link Exception} thrown by the provided {@link Callable}, with the given {@link Handler}.
+     * Swallow the {@link Exception} thrown by the provided {@link Callable}, using provided {@link Handler}.
      *
      * @param handler
      * @param callable
      */
     public static void swallow(Handler handler, Callable<?> callable) {
         swallow(callable, handler);
+    }
+
+    /**
+     * Swallow the {@link Exception} thrown by the provided {@link Callable}.
+     *
+     * @param callable
+     */
+    public static void swallow(Callable<?> callable) {
+        swallow(callable, usingLogger(e -> {}));
     }
 }
