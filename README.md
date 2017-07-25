@@ -19,6 +19,7 @@ Add the following `maven` dependency to your project `pom.xml`:
 import static io.github.ravichaturvedi.exceptionhandler.Wrap.*;
 import static io.github.ravichaturvedi.exceptionhandler.Fallback.*;
 import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
+import static io.github.ravichaturvedi.exceptionhandler.Cleanup.*;
 
 wrap(() -> {
     // do something
@@ -32,6 +33,13 @@ int value = fallback(() -> {
 swallow(() -> {
     throw new Exception("");
 }, System.out::println)
+
+cleanup(() -> {
+       throw new Exception("");
+   }, with(e -> {
+    // do something to cleanup exception
+))}
+
 ```
 
 ## Background
