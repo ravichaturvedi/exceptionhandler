@@ -24,6 +24,8 @@ import java.util.List;
 
 import static io.github.ravichaturvedi.exceptionhandler.Fallback.fallback;
 import static io.github.ravichaturvedi.exceptionhandler.Fallback.to;
+import static io.github.ravichaturvedi.exceptionhandler.Fallback.toFunc;
+import static io.github.ravichaturvedi.exceptionhandler.Wrap.wrap;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -45,5 +47,14 @@ public class TestFallback {
 
         value = fallback(to(e -> 2), () -> {throw new IllegalStateException("");});
         assertThat(value, is(2));
+
+        value = wrap(() -> fallback(toFunc(e -> 2), () -> {throw new IllegalStateException("");}));
+        assertThat(value, is(2));
+
+        try {
+            fallback(toFunc(e -> {throw new Exception(e.getMessage());}), () -> {throw new IllegalStateException("");});
+        } catch (Exception e) {
+            assertThat(e.getMessage(), is(""));
+        }
     }
 }

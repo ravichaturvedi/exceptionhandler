@@ -35,6 +35,24 @@ public class Fallback {
     }
 
     /**
+     * Represents a function that accepts {@link Exception} and produces a result.
+     * @param <V>
+     */
+    @FunctionalInterface
+    interface Func<V> {
+        V apply(Exception e) throws Exception;
+    }
+
+    /**
+     * {@link Handler} defines the handler for the fallback function, which can throw {@link Exception}.
+     * @param <V>
+     */
+    @FunctionalInterface
+    private interface TryHandler<V> {
+        V tryHandle(Exception e) throws Exception;
+    }
+
+    /**
      * Returns back the {@link Handler} using the provided value.
      *
      * @param value
@@ -66,6 +84,16 @@ public class Fallback {
     }
 
     /**
+     * Returns back the {@link TryHandler} using the given {@link Func}.
+     * @param func
+     * @param <V>
+     * @return
+     */
+    public static <V> TryHandler<V> toFunc(Func<V> func) {
+        return func::apply;
+    }
+
+    /**
      * Fallback to the {@link Handler}, if provided {@link Callable} throws an {@link Exception}.
      * @param callable
      * @param handler
@@ -81,6 +109,21 @@ public class Fallback {
     }
 
     /**
+     * Fallback to the {@link TryHandler} which may throw {@link Exception}, if provided {@link Callable} throws an {@link Exception}.
+     * @param callable
+     * @param tryHandler
+     * @param <V>
+     * @return
+     */
+    public static <V> V fallback(Callable<V> callable, TryHandler<V> tryHandler) throws Exception {
+        try {
+            return callable.call();
+        } catch (Exception e) {
+            return tryHandler.tryHandle(e);
+        }
+    }
+
+    /**
      * Fallback to the {@link Handler}, if provided {@link Callable} throws an {@link Exception}.
      * @param handler
      * @param callable
@@ -89,5 +132,16 @@ public class Fallback {
      */
     public static <V> V fallback(Handler<V> handler, Callable<V> callable) {
         return fallback(callable, handler);
+    }
+
+    /**
+     * Fallback to the {@link Handler}, if provided {@link Callable} throws an {@link Exception}.
+     * @param tryHandler
+     * @param callable
+     * @param <V>
+     * @return
+     */
+    public static <V> V fallback(TryHandler<V> tryHandler, Callable<V> callable) throws Exception {
+        return fallback(callable, tryHandler);
     }
 }
