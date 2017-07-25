@@ -9,9 +9,9 @@ Add the following `maven` dependency to your project `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>io.github.ravichaturvedi.exceptionhandler</groupId>
+    <groupId>io.github.ravichaturvedi</groupId>
     <artifactId>exceptionhandler</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 </dependency>
 ```
 
@@ -60,15 +60,15 @@ wraps the function/code block to throw runtime expression (generally requires so
 ```java
 import static io.github.ravichaturvedi.exceptionhandler.Wrap.*;
 
+// Wrapping a callable
 wrap(this::foo);
 
+// wrapping a runnable
 wrap(this::bar);
 
-// throws RuntimeException
+// wrapping a callable using exception function.
 wrap(this::foo, using(e -> new IllegalArgumentException(e)));
-
-// throws IllegalArgumentException
-wrapAll(this::foo, e -> new IllegalArgumentException(e));
+wrap(using(e -> new IllegalArgumentException(e)), this::bar);
 ```
 
 2. Fallback:
@@ -82,11 +82,11 @@ int value = fallback(this::foo, to(2));
 
 // Fallback to a supplier if actual code throws Exception
 int value = fallback(this::foo, to(() -> 2));
-int value = fallback(this::foo, () -> 2);
+int value = fallback(to(() -> 2), this::foo);
 
 // Fallback to exception function if actual code throws Exception.
 int value = fallback(this::foo, to(e -> 2));
-int value = fallback(this::foo, e -> 2);
+int value = fallback(to(e -> 2), this::foo);
 ```
 
 3. Swallow:
@@ -95,8 +95,15 @@ swallow the exception thrown by some piece of code.
 ```java
 import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
 
-// Fallback to some value if the actual code throws exception
-swallow(this::foo, with(System.out::println));
-swallow(this::bar, with(System.out::println));
+// Swalling the exception without logging
+swallow(this::foo);
+swallow(this::bar);
+
+// Swallowing the exception from some piece of code using the provided exception logger.
+swallow(this::foo, usingLogger(System.out::println));
+swallow(this::bar, usingLogger(System.out::println));
+
+swallow(usingLogger(System.out::println), this::foo);
+swallow(usingLogger(System.out::println), this::bar);
 
 ```
