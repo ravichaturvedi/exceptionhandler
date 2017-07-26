@@ -13,7 +13,7 @@ Add the following `maven` dependency to your project `pom.xml`:
 <dependency>
     <groupId>io.github.ravichaturvedi</groupId>
     <artifactId>exceptionhandler</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
 </dependency>
 ```
 
