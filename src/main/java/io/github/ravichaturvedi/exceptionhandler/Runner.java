@@ -17,17 +17,15 @@ package io.github.ravichaturvedi.exceptionhandler;
 
 
 /**
- * {@link Runner} specify some code block which returns nothing but can throw exceptionhandler.
- *
- * Intentionally kept the interface package so that outside code do not depend on this interface and use only lambda expressions.
+ * {@link Runner} specifies the semantics of the piece of code which returns nothing but may throw {@link Exception}.
  */
 @FunctionalInterface
-interface Runner {
+public interface Runner {
 
     /**
-     * Run the implementation
+     * Run some piece of code which returns nothing but can throw exception.
      *
-     * @throws Exception If underlying implementation throws.
+     * @throws Exception
      */
     void run() throws Exception;
 }

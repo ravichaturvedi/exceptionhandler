@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.ravichaturvedi.exceptionhandler;
+package io.github.ravichaturvedi.exceptionhandler.test;
 
+import io.github.ravichaturvedi.exceptionhandler.Cleanup;
 import org.junit.Test;
 
 import static io.github.ravichaturvedi.exceptionhandler.Cleanup.cleanup;
@@ -26,7 +27,7 @@ public class TestCleanup {
     @Test
     public void testHandle() {
         cleanup(() -> TestHelper.foo(new Object()), with(e -> assertEquals(e.getClass(), IllegalArgumentException.class)));
-        cleanup(Cleanup.with(e -> assertEquals(e.getClass(), IllegalArgumentException.class)), () -> TestHelper.foo(new Object()));
+        Cleanup.cleanup(Cleanup.with(e -> assertEquals(e.getClass(), IllegalArgumentException.class)), () -> TestHelper.foo(new Object()));
 
         cleanup(with(System.out::println), () -> TestHelper.foo(2));
         cleanup(TestHelper::bar, with(System.out::println));

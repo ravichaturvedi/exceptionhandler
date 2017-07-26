@@ -29,7 +29,7 @@ public class Swallow {
      * {@link ExceptionLogger} defines the exception logging mechanism
      */
     @FunctionalInterface
-    interface ExceptionLogger {
+    public interface ExceptionLogger {
         void log(Exception e);
     }
 
