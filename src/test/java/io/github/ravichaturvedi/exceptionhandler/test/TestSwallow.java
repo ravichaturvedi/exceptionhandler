@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.ravichaturvedi.exceptionhandler;
+package io.github.ravichaturvedi.exceptionhandler.test;
 
 
-public class TestHelper {
+import org.junit.Test;
 
-    public static <T> T foo(T val) throws Exception {
-        if (!(val instanceof Number)) {
-            throw new IllegalArgumentException("Not a number");
-        }
+import static io.github.ravichaturvedi.exceptionhandler.Swallow.*;
 
-        return val;
-    }
 
-    public static void bar() throws Exception {
-        throw new Exception("bla bla");
+public class TestSwallow {
+
+    @Test
+    public void testHandle() {
+        swallow(() -> TestHelper.foo(new Object()), usingLogger(System.out::println));
+        swallow(usingLogger(System.out::println), () -> TestHelper.foo(new Object()));
+
+        swallow(usingLogger(System.out::println), () -> TestHelper.foo(2));
+        swallow(TestHelper::bar, usingLogger(System.out::println));
+        swallow(usingLogger(System.out::println), TestHelper::bar);
     }
 }

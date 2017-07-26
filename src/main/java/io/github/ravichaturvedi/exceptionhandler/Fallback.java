@@ -39,7 +39,7 @@ public class Fallback {
      * @param <V>
      */
     @FunctionalInterface
-    interface Func<V> {
+    public interface Func<V> {
         V apply(Exception e) throws Exception;
     }
 
