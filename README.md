@@ -1,6 +1,6 @@
 # ExceptionHandler
 
-![alt text](https://travis-ci.org/ravichaturvedi/exceptionhandler.svg?branch=master "Build Status")
+[![Build Status](https://travis-ci.org/ravichaturvedi/exceptionhandler.svg?branch=master)](https://travis-ci.org/ravichaturvedi/exceptionhandler)
 
 Java library to simplify exception handling of any function or code block (piece of code wrapped in lambda expression) without 
 changing the execution flow from developer perspective. They can rely on the return value of the function/code block in exception handler, etc..
